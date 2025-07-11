@@ -1,0 +1,29 @@
+{
+  "name": "skillswap",
+  "version": "1.0.0",
+  "description": "Backend for skillswap website",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RitikSingh0523/SkillSwap-Backend.git"
+  },
+  "author": "Ritik Kumar Singh, Prakash kumar Mehta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RitikSingh0523/SkillSwap-Backend/issues"
+  },
+  "homepage": "https://github.com/RitikSingh0523/SkillSwap-Backend#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.3"
+  }
+}
