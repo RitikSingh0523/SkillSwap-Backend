@@ -1,9 +1,9 @@
 const successHandler = ({ status, data, message }) => {
-  return{
+  return {
     status,
     data,
     message,
-  }
+  };
 };
 
 module.exports = successHandler;

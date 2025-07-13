@@ -1,7 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const connectDB = require('./src/config/db');
-const { errorHandler } = require('./src/middleware/errorHandler');
+
 const usersRoute = require('./src/routes/UsersRoute');
 
 require('dotenv').config();
