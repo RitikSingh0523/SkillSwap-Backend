@@ -1,9 +1,9 @@
-const UserModel = require('../../models/UserModel');
 const cloudinary = require('../../config/cloudinary');
 const bcrypt = require('bcrypt');
 
 const errorHandler = require('../../middleware/errorHandler');
 const successHandler = require('../../middleware/successHandler');
+const User = require('../../models/UserModel');
 
 // Create a new user
 const userSave = async (req, res) => {
@@ -20,7 +20,7 @@ const userSave = async (req, res) => {
       skillWanted,
       bio,
     } = req.body;
-    const userExists = await UserModel.findOne({ email });
+    const userExists = await User.findOne({ email });
 
     if (userExists) {
       return res.send(
@@ -54,7 +54,7 @@ const userSave = async (req, res) => {
       bio,
     };
 
-    const SavedUser = await UserModel.create(newUser);
+    const SavedUser = await User.create(newUser);
 
     res.send(
       successHandler({
@@ -76,10 +76,10 @@ const userSave = async (req, res) => {
 // Fetch user profile by ID
 const getUserProfile = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.user;
 
     // Fetch user profile by ID
-    const userProfile = await UserModel.findById(id).select('-password');
+    const userProfile = await User.findById(id).select('-password');
 
     if (!userProfile) {
       res.send(
@@ -121,14 +121,14 @@ const getUserProfile = async (req, res) => {
 const getOtherUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const userProfile = await UserModel.findById(id).select('-password');
+    const userProfile = await User.findById(id).select('-password');
     if (!userProfile) {
       return res.send(
         errorHandler({
           status: 404,
           message: 'User Not Found',
         })
-      )
+      );
     }
     const user = {
       id: userProfile._id,
@@ -160,16 +160,10 @@ const getOtherUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
-    const {
-      name,
-      location,
-      profileImage,
-      skillOffered,
-      skillWanted,
-      bio,
-    } = req.body; 
+    const { name, location, profileImage, skillOffered, skillWanted, bio } =
+      req.body;
 
-    if(req.body.password){
+    if (req.body.password) {
       return res.send(
         errorHandler({
           status: 400,
@@ -177,7 +171,7 @@ const updateUserProfile = async (req, res) => {
         })
       );
     }
-    if(req.body.email){
+    if (req.body.email) {
       return res.send(
         errorHandler({
           status: 400,
@@ -186,7 +180,7 @@ const updateUserProfile = async (req, res) => {
       );
     }
 
-    const user = await UserModel.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.send(
@@ -213,10 +207,9 @@ const updateUserProfile = async (req, res) => {
       bio: bio || user.bio,
     };
 
-    const updateUser= await UserModel.findByIdAndUpdate(
-      id,updatedData,
-      { new: true }
-    ).select('-password');
+    const updateUser = await User.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    }).select('-password');
 
     res.send(
       successHandler({
@@ -225,8 +218,7 @@ const updateUserProfile = async (req, res) => {
         message: 'User profile updated successfully',
       })
     );
-
-  }catch (error) {
+  } catch (error) {
     res.send(
       errorHandler({
         status: 500,
@@ -234,12 +226,12 @@ const updateUserProfile = async (req, res) => {
       })
     );
   }
-}
+};
 
 module.exports = {
   userSave,
   getUserProfile,
   getOtherUserProfile,
-  getOtherUserProfile, 
+  getOtherUserProfile,
   updateUserProfile,
 };
